@@ -89,7 +89,7 @@ import java.util.Map;
  */
 public class CustomizationPickerActivity extends FragmentActivity implements WallpapersUiContainer,
         CategoryFragmentHost, ThemeFragmentHost, GridFragmentHost, ClockFragmentHost,
-        BottomActionBarHost {
+        BottomActionBarHost, PermissionChangedListener {
 
     private static final String TAG = "CustomizationPickerActivity";
     @VisibleForTesting static final String WALLPAPER_FLAVOR_EXTRA =
@@ -151,6 +151,9 @@ public class CustomizationPickerActivity extends FragmentActivity implements Wal
             navigateToSection(
                     WALLPAPER_FOCUS.equals(getIntent().getStringExtra(WALLPAPER_FLAVOR_EXTRA))
                             ? R.id.nav_wallpaper : R.id.nav_theme);
+        }
+        if (!isReadExternalStoragePermissionGranted()) {
+            requestExternalStoragePermission(this);
         }
     }
 
@@ -439,6 +442,14 @@ public class CustomizationPickerActivity extends FragmentActivity implements Wal
     @Override
     public BottomActionBar getBottomActionBar() {
         return mBottomActionBar;
+    }
+
+    @Override
+    public void onPermissionsGranted() {
+    }
+
+    @Override
+    public void onPermissionsDenied(boolean dontAskAgain) {
     }
 
     /**
