@@ -53,6 +53,15 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.android.customization.picker.GridPickerActivity"
+            android:label="@string/app_name"
+            android:resizeableActivity="true"
+            android:theme="@style/CustomizationTheme.NoActionBar">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
     </application>
 

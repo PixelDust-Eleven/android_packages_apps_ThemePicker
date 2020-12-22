@@ -20,6 +20,8 @@ import static android.app.Activity.RESULT_OK;
 import static com.android.wallpaper.widget.BottomActionBar.BottomAction.APPLY;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -98,6 +100,7 @@ public class GridFullPreviewFragment extends AppbarFragment {
         ThemesUserEventLogger eventLogger = (ThemesUserEventLogger) injector.getUserEventLogger(
                 getContext());
         final GridOptionsManager gridManager = new GridOptionsManager(
+                getContext().getContentResolver(),
                 new LauncherGridOptionsProvider(getContext(),
                         getString(R.string.grid_control_metadata_name)),
                 eventLogger);
