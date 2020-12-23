@@ -246,7 +246,6 @@ public class CustomizationPickerActivity extends FragmentActivity implements Wal
         }
         //Grid
         GridOptionsManager gridManager = new GridOptionsManager(
-                getContentResolver(),
                 new LauncherGridOptionsProvider(this,
                         getString(R.string.grid_control_metadata_name)),
                 eventLogger);

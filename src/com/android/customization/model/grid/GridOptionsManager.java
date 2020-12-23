@@ -15,14 +15,13 @@
  */
 package com.android.customization.model.grid;
 
-import android.content.ContentResolver;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings.Secure;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.android.customization.model.CustomizationManager;
 import com.android.customization.module.ThemesUserEventLogger;
 
 import java.util.List;
@@ -30,24 +29,25 @@ import java.util.List;
 /**
  * {@link CustomizationManager} for interfacing with the launcher to handle {@link GridOption}s.
  */
-public class GridOptionsManager extends BaseGridOptionsManager {
+public class GridOptionsManager implements CustomizationManager<GridOption> {
 
     private final LauncherGridOptionsProvider mProvider;
     private final ThemesUserEventLogger mEventLogger;
-    static final String GRID_OPTION_SETTING = "custom_grid_option";
-    private final ContentResolver mContentResolver;
 
-    public GridOptionsManager(ContentResolver resolver, LauncherGridOptionsProvider provider, ThemesUserEventLogger logger) {
-        super(provider);
+    public GridOptionsManager(LauncherGridOptionsProvider provider, ThemesUserEventLogger logger) {
         mProvider = provider;
-        mContentResolver = resolver;
         mEventLogger = logger;
     }
 
     @Override
-    protected void handleApply(GridOption option, Callback callback) {
-        boolean stored = Secure.putString(mContentResolver, GRID_OPTION_SETTING, option.getTitle());
-        if (stored) {
+    public boolean isAvailable() {
+        return mProvider.areGridsAvailable();
+    }
+
+    @Override
+    public void apply(GridOption option, Callback callback) {
+        int updated = mProvider.applyGrid(option.name);
+        if (updated == 1) {
             mEventLogger.logGridApplied(option);
             callback.onSuccess();
         } else {
@@ -56,8 +56,8 @@ public class GridOptionsManager extends BaseGridOptionsManager {
     }
 
     @Override
-    protected String lookUpCurrentGrid() {
-        return Secure.getString(mContentResolver, GRID_OPTION_SETTING);
+    public void fetchOptions(OptionsFetchedListener<GridOption> callback, boolean reload) {
+        new FetchTask(mProvider, callback, reload).execute();
     }
 
     /** Call through content provider API to render preview */

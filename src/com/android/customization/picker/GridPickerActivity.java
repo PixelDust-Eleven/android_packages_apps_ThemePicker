@@ -58,24 +58,9 @@ public class GridPickerActivity extends FragmentActivity implements GridFragment
         ThemesUserEventLogger eventLogger = (ThemesUserEventLogger) injector.getUserEventLogger(
                 this);
         mGridManager = new GridOptionsManager(
-                getContentResolver(),
                 new LauncherGridOptionsProvider(this,
                         getString(R.string.grid_control_metadata_name)),
                 eventLogger) {
-
-            @Override
-            protected void handleApply(GridOption option, Callback callback) {
-                Intent result = new Intent();
-                result.putExtra(EXTRA_GRID_OPTION, option.getTitle());
-                setResult(RESULT_OK, result);
-                callback.onSuccess();
-                finish();
-            }
-
-            @Override
-            protected String lookUpCurrentGrid() {
-                return getIntent().getStringExtra(EXTRA_GRID_OPTION);
-            }
         };
         if (!mGridManager.isAvailable()) {
             finish();
